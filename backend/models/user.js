@@ -1,9 +1,10 @@
 const { Schema, model } = require('mongoose');
+const validator = require('validator');
 
 const userSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    default: 'Жак-Ив Кусто',
     minlength: 2,
     maxlength: 30,
     validate: {
@@ -14,9 +15,10 @@ const userSchema = new Schema({
       message: 'Введите имя',
     },
   },
+
   about: {
     type: String,
-    required: true,
+    default: 'Исследователь',
     minlength: 2,
     maxlength: 30,
     validate: {
@@ -30,14 +32,29 @@ const userSchema = new Schema({
 
   avatar: {
     type: String,
-    required: true,
-    validate: {
-      validator(v) {
-        // eslint-disable-next-line no-useless-escape
-        return /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(v);
-      },
-      message: 'Введите ссылку',
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    validate(value) {
+      if (!validator.isURL(value)) {
+        throw new Error('Неккоректная ссылка');
+      }
     },
+  },
+
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    validate(value) {
+      if (!validator.isEmail(value)) {
+        throw new Error('Неккоректный e-mail');
+      }
+    },
+  },
+
+  password: {
+    type: String,
+    required: true,
+    minlength: 6,
   },
 });
 

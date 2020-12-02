@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const validator = require('validator');
 
 const cardSchema = new Schema({
   name: {
@@ -6,16 +7,21 @@ const cardSchema = new Schema({
     required: true,
     minlength: 2,
     maxlength: 30,
+    validate: {
+      validator(v) {
+        // eslint-disable-next-line no-useless-escape
+        return /[a-zA-ZА-ЯЁа-яё\s\d\-]+/.test(v);
+      },
+      message: 'Введите описание',
+    },
   },
   link: {
     type: String,
     required: true,
-    validate: {
-      validator(v) {
-        // eslint-disable-next-line no-useless-escape
-        return /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(v);
-      },
-      message: 'Введите ссылку',
+    validate(value) {
+      if (!validator.isURL(value)) {
+        throw new Error('Неккоректная ссылка');
+      }
     },
   },
   owner: {
