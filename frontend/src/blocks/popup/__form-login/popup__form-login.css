@@ -1,0 +1,18 @@
+.popup__form-login {
+  width: 430px;
+  height: 330px;
+  background: #ffffff;
+  border-radius: 10px;
+  margin: 34px 36px 36px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media screen and (max-width: 650px) {
+  .popup__form-login {
+    width: 280px;
+    height: 308px;
+  }
+}

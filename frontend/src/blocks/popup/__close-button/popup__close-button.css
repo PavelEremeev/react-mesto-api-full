@@ -1,0 +1,31 @@
+@import url(./_new-place/popup__close-button_newplace.css);
+@import url(./_zoom/popup__close-button_zoom.css);
+@import url(./_login/popup__close-button_login.css);
+
+.popup__close-button {
+  background-image: url(../../../images/close_button.svg);
+  background-position: center;
+  border: none;
+  cursor: pointer;
+  transition: linear 0.3s all;
+  width: 41px;
+  height: 41px;
+  background-color: transparent;
+  position: absolute;
+  top: -40px;
+  right: -40px;
+}
+
+.popup__close-button:hover {
+  opacity: 0.5;
+  transition: linear 0.3s all;
+}
+
+@media screen and (max-width: 375px) {
+  .popup__close-button {
+    top: -20px;
+    right: -20px;
+    height: 20px;
+    width: 20px;
+  }
+}

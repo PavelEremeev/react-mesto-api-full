@@ -1,0 +1,33 @@
+/* @import url(./_avatar/popup_avatar.css);
+@import url(./_confirm/popup_confirm.css);
+@import url(./_new-place/popup_new-place.css);
+@import url(./_opened/popup_opened.css);
+@import url(./_zoom/popup_zoom.css); */
+@import url(./__input-error/popup__input-error.css);
+@import url(./__form/popup__form.css);
+@import url(./__form-login/popup__form-login.css);
+@import url(./__close-button/popup__close-button.css);
+@import url(./__text/popup__text.css);
+@import url(./__text-login/popup__text-login.css);
+@import url(./__submit-button/popup__submit-button.css);
+@import url(./__input/popup__input.css);
+@import url(./__containter/popup__container.css);
+@import url(./__image/popup__image.css);
+@import url(./__image-login/popup__image-login.css);
+@import url(./__caption/popup__caption.css);
+@import url(./__text/_confirm/popup__text_confirm.css);
+
+.popup {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  top: 0;
+  left: 0;
+  display: flex;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.5s linear, opacity 0.4s ease-in-out;
+  align-items: center;
+  justify-content: center;
+}

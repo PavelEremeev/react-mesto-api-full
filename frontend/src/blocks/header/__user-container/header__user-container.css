@@ -1,0 +1,13 @@
+.header__user-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  max-height: 22px;
+  margin-top: 30px;
+}
+
+@media screen and (max-width: 450px) {
+  .header__user-container {
+    display: none;
+  }
+}

@@ -1,0 +1,15 @@
+.header__button.header__button_active {
+  background-color: transparent;
+}
+
+.header__button.header__button_active::before {
+  transform: rotate(45deg);
+  top: 0;
+  transition: top 0.2s linear, transform 0.2s ease-in 0.2s;
+}
+
+.header__button.header__button_active::after {
+  transform: rotate(-45deg);
+  top: 0;
+  transition: top 0.2s linear, transform 0.2s ease-in 0.2s;
+}

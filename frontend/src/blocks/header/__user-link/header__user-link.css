@@ -1,0 +1,20 @@
+.header__user-link {
+  cursor: pointer;
+  border: none;
+  color: #a9a9a9;
+  text-decoration: none;
+  transition: linear 0.3s all;
+  line-height: 22px;
+  font-size: 18px;
+}
+
+.header__user-link:hover {
+  color: white;
+  transition: linear 0.5s all;
+}
+
+@media screen and (max-width: 450px) {
+  .header__user-link {
+    margin: 0 0 18px 0;
+  }
+}
