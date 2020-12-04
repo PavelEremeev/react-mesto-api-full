@@ -1,6 +1,6 @@
 const Card = require('../models/card');
 
-module.exports.getCard = (req, res) => Card.find({})
+module.exports.getCards = (req, res) => Card.find({})
   .orFail(() => {
     const err = new Error('Карточка не найдена');
     err.statusCode = 404;
@@ -47,3 +47,49 @@ module.exports.deleteCard = (req, res) => Card.findByIdAndRemove(req.params._id)
     }
   });
 
+module.exports.addLike = (req, res) =>
+  Card.findByIdAndUpdate(
+    req.params._id,
+    {
+      $addToSet: { likes: req.params.user._id },
+    },
+    { new: true }
+  )
+  .orFail(() => {
+    const err = new Error('Карточка не найдена');
+    err.statusCode = 404;
+    throw err;
+  })
+  .then((likes) => res.send({data: likes}))
+  .catch((err) => {
+   if (err.kind === undefined) {
+     return res.status(404).send({ message: err.message });
+    } if (err.kind === 'ObjectId') {
+     return res.status(400).send({ message: 'Нет карточки с таким id' });
+    }
+    return res.status(500).send({ message: 'Ошибка чтения файла' });
+  });
+
+
+module.exports.removeLike = (req, res) =>
+Card.findByIdAndUpdate(
+  req.params._id,
+  {
+    $pull: { likes: req.params.user._id },
+  },
+  { new: true }
+)
+.orFail(() => {
+  const err = new Error('Карточка не найдена');
+  err.statusCode = 404;
+  throw err;
+})
+.then((likes) => res.send({data: likes}))
+.catch((err) => {
+ if (err.kind === undefined) {
+   return res.status(404).send({ message: err.message });
+  } if (err.kind === 'ObjectId') {
+   return res.status(400).send({ message: 'Нет карточки с таким id' });
+  }
+  return res.status(500).send({ message: 'Ошибка чтения файла' });
+});

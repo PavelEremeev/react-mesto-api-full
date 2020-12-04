@@ -107,14 +107,21 @@ module.exports.getOneUser = (req, res) => {
 
 module.exports.updateUserInfo = (req, res) => {
   const { name, about } = req.body
-  User.findByIdAndUpdate(req.params.user._id, { name , about }, )
+  User.findByIdAndUpdate(
+    req.params.user._id,
+    { name , about },
+    {
+      new: true,
+      runValidators: true,
+      upsert: true,
+    } )
   .orFail(() => {
     const err = new Error('Пользователь не найден');
     err.statusCode = 404;
     throw err;
   })
   .then((user) => {
-    res.status(200).send(user)
+    res.status(200).send({ data: user })
   })
   .catch((err) => {
     if (err.kind === undefined) {
@@ -129,14 +136,21 @@ module.exports.updateUserInfo = (req, res) => {
 
 module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body
-  User.findByIdAndUpdate(req.params.user._id, { avatar }, )
+  User.findByIdAndUpdate(
+    req.params.user._id,
+    { avatar },
+    {
+      new: true,
+      runValidators: true,
+      upsert: true,
+    } )
   .orFail(() => {
     const err = new Error('Пользователь не найден');
     err.statusCode = 404;
     throw err;
   })
   .then((user) => {
-    res.status(200).send(user)
+    res.status(200).send({ data: user })
   })
   .catch((err) => {
     if (err.kind === undefined) {
