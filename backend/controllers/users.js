@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -11,30 +12,28 @@ module.exports.login = (req, res) => {
     .then((user) => {
       if (!user) {
         return Promise.reject(new Error('Неправильные почта или пароль'));
-      }
-      return bcrypt.compare(password, user.password);
-    })
-    .then((matched) => {
-      if (!matched) {
-        // хеши не совпали — отклоняем промис
-        return Promise.reject(new Error('Неправильные почта или пароль'));
-      }
-      // аутентификация успешна
-      const token = jwt.sign({
-        _id: user._id
-      }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', {expiresIn: '7d'})
-      res.send({ token });
-    })
+      } if (user) {
+        return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          // аутентификация успешна
+          const token = jwt.sign({
+            _id: user._id
+          }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', {expiresIn: '7d'})
+          if (!matched) {
+          // хеши не совпали — отклоняем промис
+          return Promise.reject(new Error('Неправильные почта или пароль'));
+          }
+          res.send({ token });
+        });
+      }})
     .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err.message });
+      res.status(401).send({ message: err.message });
     });
 };
 
 
 
-module.exports.getUser = (req, res) => {
+module.exports.getUsers = (req, res) => {
   User.find({})
     .orFail(() => {
       const err = new Error('Пользователь не найден');
@@ -56,7 +55,6 @@ module.exports.createUser = (req, res) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-
   // User.create({ name, about, avatar, email, password })
   bcrypt.hash(password, 10)
     .then((hash) => User.create({

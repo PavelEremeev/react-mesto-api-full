@@ -3,6 +3,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
+const {login, createUser} = require('./controllers/users.js')
 const usersRouter = require('./routes/users.js');
 const cardsRouter = require('./routes/cards.js');
 const unknownRoute = require('./routes/unknown.js');
@@ -30,8 +31,13 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use('/', usersRouter);
 app.use('/', cardsRouter);
 app.use('/', unknownRoute);
+app.post('/signin', login);
+app.post('/signup', createUser);
+
+app.use(auth)
 
 app.listen(PORT, () => console.log(`Server is running on PORT:${PORT}`));
