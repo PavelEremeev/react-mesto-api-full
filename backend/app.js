@@ -7,6 +7,11 @@ const {login, createUser} = require('./controllers/users.js')
 const usersRouter = require('./routes/users.js');
 const cardsRouter = require('./routes/cards.js');
 const unknownRoute = require('./routes/unknown.js');
+const auth = require('./middlewares/auth')
+const {
+  validateUser,
+  validateLogin,
+} = require('./middlewares/validators')
 
 const app = express();
 const PORT = 3000;
@@ -23,21 +28,22 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 mongoose.connect(mongoDbUrl, mongoConnectionOptions);
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '5fa2d039cb2c1312e8710f73',
-  };
-  next();
-});
+// app.use((req, res, next) => {
+//   req.user = {
+//     _id: '5fa2d039cb2c1312e8710f73',
+//   };
+//   next();
+// });
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', usersRouter);
+// app.use('/', auth, usersRouter);
+// app.use('/', auth, cardsRouter);
+app.use('/users', usersRouter);
 app.use('/', cardsRouter);
 app.use('/', unknownRoute);
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', validateLogin, login);
+app.post('/signup', validateLogin, createUser);
 
-app.use(auth)
 
 app.listen(PORT, () => console.log(`Server is running on PORT:${PORT}`));

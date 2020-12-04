@@ -8,7 +8,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
 
-  User.findOne({ email })
+  User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         return Promise.reject(new Error('Неправильные почта или пароль'));
@@ -104,3 +104,46 @@ module.exports.getOneUser = (req, res) => {
       return res.status(500).send({ message: 'Ошибка чтения файла' });
     });
 };
+
+module.exports.updateUserInfo = (req, res) => {
+  const { name, about } = req.body
+  User.findByIdAndUpdate(req.params.user._id, { name , about }, )
+  .orFail(() => {
+    const err = new Error('Пользователь не найден');
+    err.statusCode = 404;
+    throw err;
+  })
+  .then((user) => {
+    res.status(200).send(user)
+  })
+  .catch((err) => {
+    if (err.kind === undefined) {
+      return res.status(err.statusCode).send({ message: err.message });
+    } if (err.kind === 'ObjectId') {
+      return res.status(400).send({ message: 'Неправильный id пользователя' });
+    }
+    return res.status(500).send({ message: 'Ошибка чтения файла' });
+  });
+}
+
+
+module.exports.updateUserAvatar = (req, res) => {
+  const { avatar } = req.body
+  User.findByIdAndUpdate(req.params.user._id, { avatar }, )
+  .orFail(() => {
+    const err = new Error('Пользователь не найден');
+    err.statusCode = 404;
+    throw err;
+  })
+  .then((user) => {
+    res.status(200).send(user)
+  })
+  .catch((err) => {
+    if (err.kind === undefined) {
+      return res.status(err.statusCode).send({ message: err.message });
+    } if (err.kind === 'ObjectId') {
+      return res.status(400).send({ message: 'Неправильный id пользователя' });
+    }
+    return res.status(500).send({ message: 'Ошибка чтения файла' });
+  });
+}

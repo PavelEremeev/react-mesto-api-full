@@ -46,3 +46,4 @@ module.exports.deleteCard = (req, res) => Card.findByIdAndRemove(req.params._id)
       res.status(500).send({ message: 'Ошибка чтения файла' });
     }
   });
+
