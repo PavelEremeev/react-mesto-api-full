@@ -18,6 +18,7 @@ module.exports.getCards = (req, res) => Card.find({})
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
+  console.log(req.user._id)
   const { _id } = req.user;
   Card.create({ name, link, owner: _id })
     .then((card) => res.send(card))
@@ -51,7 +52,7 @@ module.exports.addLike = (req, res) =>
   Card.findByIdAndUpdate(
     req.params._id,
     {
-      $addToSet: { likes: req.params.user._id },
+      $addToSet: { likes: req.user._id },
     },
     { new: true }
   )
@@ -60,7 +61,7 @@ module.exports.addLike = (req, res) =>
     err.statusCode = 404;
     throw err;
   })
-  .then((likes) => res.send({data: likes}))
+  .then((likes) => res.send(likes))
   .catch((err) => {
    if (err.kind === undefined) {
      return res.status(404).send({ message: err.message });
@@ -75,7 +76,7 @@ module.exports.removeLike = (req, res) =>
 Card.findByIdAndUpdate(
   req.params._id,
   {
-    $pull: { likes: req.params.user._id },
+    $pull: { likes: req.user._id },
   },
   { new: true }
 )
@@ -84,7 +85,7 @@ Card.findByIdAndUpdate(
   err.statusCode = 404;
   throw err;
 })
-.then((likes) => res.send({data: likes}))
+.then((likes) => res.send(likes))
 .catch((err) => {
  if (err.kind === undefined) {
    return res.status(404).send({ message: err.message });

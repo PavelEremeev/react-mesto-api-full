@@ -37,10 +37,10 @@ mongoose.connect(mongoDbUrl, mongoConnectionOptions);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/', auth, usersRouter);
-// app.use('/', auth, cardsRouter);
-app.use('/users', usersRouter);
-app.use('/', cardsRouter);
+app.use('/', auth, usersRouter);
+app.use('/', auth, cardsRouter);
+// app.use('/users', usersRouter);
+// app.use('/cards', cardsRouter);
 app.use('/', unknownRoute);
 app.post('/signin', validateLogin, login);
 app.post('/signup', validateLogin, createUser);
