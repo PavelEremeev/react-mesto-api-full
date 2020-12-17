@@ -40,10 +40,10 @@ mongoose.connect(mongoDbUrl, mongoConnectionOptions);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/users', auth, usersRouter);
-// app.use('/cards', auth, cardsRouter);
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
+app.use('/users', auth, usersRouter);
+app.use('/cards', auth, cardsRouter);
+// app.use('/users', usersRouter);
+// app.use('/cards', cardsRouter);
 app.use('/', unknownRoute);
 app.post('/signin', validateLogin, login);
 app.post('/signup', validateUser, createUser);

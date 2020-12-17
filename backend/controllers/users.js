@@ -109,7 +109,7 @@ module.exports.getOneUser = (req, res) => {
 module.exports.updateUserInfo = (req, res) => {
   const { name, about } = req.body
   User.findByIdAndUpdate(
-    req.params.user._id,
+    req.user._id,
     { name , about },
     {
       new: true,
@@ -138,7 +138,7 @@ module.exports.updateUserInfo = (req, res) => {
 module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body
   User.findByIdAndUpdate(
-    req.params.user._id,
+    req.user._id,
     { avatar },
     {
       new: true,

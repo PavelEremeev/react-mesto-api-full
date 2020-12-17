@@ -1,12 +1,7 @@
 const Card = require('../models/card');
 
-module.exports.getCards = (req, res) => Card.find({})
-  // .orFail(() => {
-  //   console.log(data)
-  //   const err = new Error('Карточка не найдена');
-  //   err.statusCode = 404;
-  //   throw err;
-  // })
+module.exports.getCards = (req, res) => {
+  return Card.find({})
   .populate('user')
   .then((cards) => res.send(cards))
   .catch((err) => {
@@ -17,6 +12,7 @@ module.exports.getCards = (req, res) => Card.find({})
     }
     return res.status(500).send({ message: 'Ошибка чтения файла' });
   });
+}
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
@@ -65,7 +61,7 @@ module.exports.addLike = (req, res) =>
     err.statusCode = 404;
     throw err;
   })
-  .then((likes) => res.send(likes))
+  .then((likes) => res.send({ data:likes }))
   .catch((err) => {
    if (err.kind === undefined) {
      return res.status(404).send({ message: err.message });
@@ -89,7 +85,7 @@ Card.findByIdAndUpdate(
   err.statusCode = 404;
   throw err;
 })
-.then((likes) => res.send(likes))
+.then((likes) => res.send({ data:likes }))
 .catch((err) => {
  if (err.kind === undefined) {
    return res.status(404).send({ message: err.message });

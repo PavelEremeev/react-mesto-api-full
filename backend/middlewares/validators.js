@@ -1,8 +1,9 @@
 const { celebrate, Joi, CelebrateError } = require('celebrate');
+const validator = require('validator');
 
 const urlValidation = (value) => {
   if (!validator.isURL(value)) {
-    throw new CelebrateError('incorrect URL');
+    throw new CelebrateError('Некорректный URL');
   }
   return value;
 };
