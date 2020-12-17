@@ -1,13 +1,14 @@
 const Card = require('../models/card');
 
 module.exports.getCards = (req, res) => Card.find({})
-  .orFail(() => {
-    console.log(data)
-    const err = new Error('Карточка не найдена');
-    err.statusCode = 404;
-    throw err;
-  })
-  .then((data) => res.send(data))
+  // .orFail(() => {
+  //   console.log(data)
+  //   const err = new Error('Карточка не найдена');
+  //   err.statusCode = 404;
+  //   throw err;
+  // })
+  .populate('user')
+  .then((cards) => res.send(cards))
   .catch((err) => {
     if (err.kind === 'ObjectId') {
       return res.status(400).send({ message: 'Невалидный Id' });
@@ -19,8 +20,10 @@ module.exports.getCards = (req, res) => Card.find({})
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
-  console.log(req.user._id)
-  Card.create({ name, link, owner: req.user._id })
+  console.log(req.body)
+  const { _id } = req.user;
+  console.log(_id)
+  Card.create({ name, link, owner: _id })
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.kind === undefined) {
@@ -31,6 +34,7 @@ module.exports.createCard = (req, res) => {
       return res.status(500).send({ message: 'Ошибка чтения файла' });
     });
 };
+
 
 module.exports.deleteCard = (req, res) => Card.findByIdAndRemove(req.params._id)
   .then((card) => {

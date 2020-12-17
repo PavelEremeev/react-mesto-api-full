@@ -17,7 +17,7 @@ const {
 router.get('/', getCards);
 
 // // Создание карточки
-router.post('/', validateCard, createCard);
+router.post('/',  createCard);
 
 // Удаление карточки
 router.delete('/:_id', validateUserId, deleteCard);
