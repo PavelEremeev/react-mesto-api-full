@@ -1,10 +1,17 @@
 const { celebrate, Joi, CelebrateError } = require('celebrate');
 
+const urlValidation = (value) => {
+  if (!validator.isURL(value)) {
+    throw new CelebrateError('incorrect URL');
+  }
+  return value;
+};
+
 const validateUser = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(40),
-    about: Joi.string().required().min(2).max(200),
-    avatar: Joi.link().required(),
+    name: Joi.string().min(2).max(40),
+    about: Joi.string().min(2).max(200),
+    avatar: Joi.string().custom(urlValidation),
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
   })
@@ -25,14 +32,14 @@ const validateUserInfoUpdate = celebrate({
 
 const validateUserAvatarUpdate = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.link().required(),
+    avatar: Joi.string().custom(urlValidation).required(),
   }),
 });
 
 const validateLogin = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(6),
+    password: Joi.string().required().min(8),
   }),
 });
 
@@ -40,7 +47,7 @@ const validateLogin = celebrate({
 const validateCard = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.link().required(),
+    link: Joi.string().custom(urlValidation).required(),
   }),
 });
 

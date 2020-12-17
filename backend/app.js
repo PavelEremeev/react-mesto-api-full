@@ -1,9 +1,11 @@
-const express = require('express');
 require('dotenv').config();
+const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 const {login, createUser} = require('./controllers/users.js')
+const { errors } = require('celebrate');
 const usersRouter = require('./routes/users.js');
 const cardsRouter = require('./routes/cards.js');
 const unknownRoute = require('./routes/unknown.js');
@@ -23,6 +25,7 @@ const mongoConnectionOptions = {
   useUnifiedTopology: true,
 };
 
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -37,13 +40,15 @@ mongoose.connect(mongoDbUrl, mongoConnectionOptions);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', auth, usersRouter);
-app.use('/', auth, cardsRouter);
+app.use('/users', auth, usersRouter);
+app.use('/cards', auth, cardsRouter);
 // app.use('/users', usersRouter);
 // app.use('/cards', cardsRouter);
 app.use('/', unknownRoute);
 app.post('/signin', validateLogin, login);
-app.post('/signup', validateLogin, createUser);
+app.post('/signup', validateUser, createUser);
 
+
+app.use(errors());
 
 app.listen(PORT, () => console.log(`Server is running on PORT:${PORT}`));
