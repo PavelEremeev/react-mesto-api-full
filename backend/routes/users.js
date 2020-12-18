@@ -7,6 +7,7 @@ const {
   updateUserInfo
  } = require('../controllers/users');
 const {
+  validateUser,
   validateUserId,
   validateUserInfoUpdate,
   validateUserAvatarUpdate,
@@ -18,7 +19,7 @@ router.get('/', getUsers);
 
 
 // Получение определенного юзера
-router.get('/:_id', validateUserId , getOneUser);
+router.get('/:_id', validateUser, getOneUser);
 
 
 // Обновление информации

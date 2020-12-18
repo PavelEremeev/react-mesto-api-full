@@ -145,7 +145,7 @@ function App() {
         if (data) {
           console.log(data)
           setLoggedIn(true)
-          setEmail(data.data.email)
+          setEmail(data.email)
           history.push('/')
         }
       }).catch(err => {

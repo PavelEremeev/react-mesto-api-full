@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const path = require('path');
 const {login, createUser} = require('./controllers/users.js')
 const { requestLogger, errorLogger } = require('./middlewares/logger.js')
@@ -26,6 +27,8 @@ const mongoConnectionOptions = {
 };
 
 app.use(requestLogger);
+
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

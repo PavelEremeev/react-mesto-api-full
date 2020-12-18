@@ -1,3 +1,6 @@
+import { getToken } from './token';
+const token = getToken('jwt');
+
 const handleResponse = res => {
   if (res.ok) {
     return res.json();
@@ -12,16 +15,25 @@ class Api {
     this._headers = headers;
   }
 
+  _getHeaders() {
+    const token = getToken('jwt');
+    return {
+      ...this._headers,
+      'Authorization': `Bearer ${token}`,
+    }
+  }
+
   getUserInfo() {
     return fetch(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
+      headers: this._getHeaders(),
+      
     }).then(handleResponse);
   }
 
   updateUserInfo(formData) {
     return fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
-      headers: this._headers,
+      headers: this._getHeaders(),
       body: JSON.stringify(formData),
     }).then(handleResponse);
   }
@@ -29,21 +41,21 @@ class Api {
   updateUserImage(formData) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: "PATCH",
-      headers: this._headers,
+      headers: this._getHeaders(),
       body: JSON.stringify(formData),
     }).then(handleResponse);
   }
 
   getItems() {
     return fetch(`${this._baseUrl}/cards`, {
-      headers: this._headers,
+      headers: this._getHeaders(),
     }).then(handleResponse);
   }
 
   deleteItem(item) {
     return fetch(`${this._baseUrl}/cards/${item._id}`, {
       method: "DELETE",
-      headers: this._headers,
+      headers: this._getHeaders(),
     }).then(handleResponse);
   }
 
@@ -64,21 +76,21 @@ class Api {
   putLike(cardId) {
     return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
       method: "PUT",
-      headers: this._headers,
+      headers: this._getHeaders(),
     }).then(handleResponse);
   }
 
   deleteLike(cardId) {
     return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
       method: "DELETE",
-      headers: this._headers,
+      headers: this._getHeaders(),
     }).then(handleResponse);
   }
 
   createItem(item) {
     return fetch(`${this._baseUrl}/cards`, {
       method: "POST",
-      headers: this._headers,
+      headers: this._getHeaders(),
       body: JSON.stringify(item),
     }).then(handleResponse);
   }
@@ -86,11 +98,12 @@ class Api {
 
 // Создание экземпляра класс API для взаимодействия с сервером
 const api = new Api({
-  baseUrl: "https://mesto.nomoreparties.co/v1/cohort-14",
+  // baseUrl: "https://mesto.nomoreparties.co/v1/cohort-14",
+  baseUrl: "http://localhost:3000",
   headers: {
-    authorization: "957c9aa7-6dd0-46ee-b746-30b25c4b69ab",
     "Content-Type": "application/json",
   },
 });
 
 export default api;
+

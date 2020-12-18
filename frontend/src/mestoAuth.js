@@ -1,23 +1,23 @@
-import { setToken } from './utils/token';
+// старый адрес API Янлекс.Практикума
+// export const BASE_URL = 'https://auth.nomoreparties.co';
 
-export const BASE_URL = 'https://auth.nomoreparties.co';
+export const BASE_URL = 'http://localhost:3000';
 
 export const register = (email, password) => {
   return fetch(`${BASE_URL}/signup`, {
     method: 'POST',
     headers: {
+      'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ email, password })
   })
     .then((res) => {
-      return res.json();
-    })
-    .then((res) => {
       return res;
     })
     .catch((err) => console.log(err));
 };
+
 
 export const authorize = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
@@ -29,16 +29,6 @@ export const authorize = (email, password) => {
     body: JSON.stringify({ email, password })
   })
     .then(res => res.json())
-    // .then((data) => {
-    //   if (data.token) {
-    //     console.log(data)
-    //     setToken(data.token);
-    //     console.log(setToken)
-    //     return data;
-    //   } else {
-    //     return;
-    //   }
-    // })
     .catch(err => console.log(err))
 };
 
