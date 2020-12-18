@@ -2,9 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
 const path = require('path');
 const {login, createUser} = require('./controllers/users.js')
+const { requestLogger, errorLogger } = require('./middlewares/logger.js')
 const { errors } = require('celebrate');
 const usersRouter = require('./routes/users.js');
 const cardsRouter = require('./routes/cards.js');
@@ -16,7 +16,7 @@ const {
 } = require('./middlewares/validators')
 
 const app = express();
-const PORT = 3000;
+const { PORT = 3000 } = process.env;
 const mongoDbUrl = 'mongodb://localhost:27017/mestodb';
 const mongoConnectionOptions = {
   useNewUrlParser: true,
@@ -25,7 +25,8 @@ const mongoConnectionOptions = {
   useUnifiedTopology: true,
 };
 
-app.use(cookieParser());
+app.use(requestLogger);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -42,6 +43,7 @@ app.post('/signin', validateLogin, login);
 app.post('/signup', validateUser, createUser);
 
 // обработка ошибок
+app.use(errorLogger);
 app.use(errors());
 app.use((err, req, res, next) => {
   if (err.status !== '500') {
