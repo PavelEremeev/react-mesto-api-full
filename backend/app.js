@@ -31,13 +31,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 mongoose.connect(mongoDbUrl, mongoConnectionOptions);
 
-// app.use((req, res, next) => {
-//   req.user = {
-//     _id: '5fa2d039cb2c1312e8710f73',
-//   };
-//   next();
-// });
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', auth, usersRouter);
@@ -48,7 +41,15 @@ app.use('/', unknownRoute);
 app.post('/signin', validateLogin, login);
 app.post('/signup', validateUser, createUser);
 
-
+// обработка ошибок
 app.use(errors());
+app.use((err, req, res, next) => {
+  if (err.status !== '500') {
+    res.status(err.status).send(err.message);
+    return;
+  }
+  res.status(500).send({ message: `Ошибка на сервере: ${err.message}` });
+  next();
+});
 
 app.listen(PORT, () => console.log(`Server is running on PORT:${PORT}`));
