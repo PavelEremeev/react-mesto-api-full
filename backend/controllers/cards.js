@@ -15,11 +15,12 @@ module.exports.getCards = (req, res) => {
 }
 
 module.exports.createCard = (req, res, next) => {
-  const { name, link } = req.body;
   console.log(req.body)
-  const { _id } = req.user._id;
-  console.log(_id)
-  Card.create({ name, link, owner: _id })
+  console.log(req.user._id)
+  Card.create({
+    name: req.body.name,
+    link: req.body.link,
+    owner: req.user._id, })
     .catch((err) => {
       if (err.kind === undefined) {
         return res.status(404).send({ message: err.message });
