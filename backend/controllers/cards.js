@@ -45,9 +45,9 @@ Card.findByIdAndRemove(req.params._id)
     }
   })
   .then((card) => {
-    if (!card) {
-      return res.status(404).send({ message: 'Нет карточки с таким id' });
-    }
+    if (toString(card.owner) !== toString(req.user._id)) {
+      return res.status(400).send({ message: 'Нет прав на удаление карточки' });
+    } 
     return res.status(200).send(card);
   })
   .catch(next);

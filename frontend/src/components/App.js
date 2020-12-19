@@ -40,15 +40,19 @@ function App() {
 
   const history = useHistory();
 
+
   useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getItems()])
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getItems()])
       .then(([userInfo, initialCards]) => {
         setCurrentUser(userInfo);
         setCurrentCards(initialCards);
       })
-      .catch((err) => console.log(err));
-  }, []);
-
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+  }, [loggedIn]);
 
 
 
@@ -103,12 +107,10 @@ function App() {
   }
 
   function handleUserRegister(email, password) {
-    mestoAuth.register(email, password).then((res) => {
-      if (res.data._id) {
+    mestoAuth.register(email, password).then(() => {    
         setStatus(true)
         setIsAuthPopupPopupOpen(true)
         history.push('/signin');
-      }
     }).catch(err => {
       console.log(err)
       setStatus(false)
