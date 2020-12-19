@@ -17,7 +17,7 @@ module.exports.getCards = (req, res) => {
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   console.log(req.body)
-  const { _id } = req.user;
+  const { _id } = req.user._id;
   console.log(_id)
   Card.create({ name, link, owner: _id })
     .catch((err) => {
@@ -33,7 +33,7 @@ module.exports.createCard = (req, res, next) => {
 };
 
 
-module.exports.deleteCard = (req, res, next) => 
+module.exports.deleteCard = (req, res, next) =>
 Card.findByIdAndRemove(req.params._id)
   .catch((err) => {
     if (err.name === 'ValidationError') {
@@ -47,7 +47,7 @@ Card.findByIdAndRemove(req.params._id)
   .then((card) => {
     if (toString(card.owner) !== toString(req.user._id)) {
       return res.status(400).send({ message: 'Нет прав на удаление карточки' });
-    } 
+    }
     return res.status(200).send(card);
   })
   .catch(next);

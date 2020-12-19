@@ -3,11 +3,9 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext'
 
 
 function Card({ onClick, onCardDislike, onCardLike, onCardDelete, card, ...rest }) {
-  const currentUser = useContext(CurrentUserContext)
-  const isOwner = card.owner._id === currentUser._id;
-  const isLiked = card.likes.some((i) =>
-    i._id === currentUser._id
-  )
+  const currentUser = useContext(CurrentUserContext);
+  const isOwner = card.owner === currentUser._id;
+  const isLiked = card.likes.some(i => i === currentUser._id);
 
   const cardLikeButton = (`element__like-button ${isLiked ? 'element__like-button_active' : ''}`)
 
