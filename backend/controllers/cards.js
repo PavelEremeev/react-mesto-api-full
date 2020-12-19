@@ -73,7 +73,7 @@ module.exports.addLike = (req, res, next) =>
      }
      return res.status(500).send({ message: 'Ошибка чтения файла' });
    })
-  .then((likes) => res.send({ data:likes }))
+  .then((likes) => res.send(likes))
   .catch(next);
 
 
@@ -98,5 +98,5 @@ Card.findByIdAndUpdate(
    }
    return res.status(500).send({ message: 'Ошибка чтения файла' });
  })
-.then((likes) => res.send({ data:likes }))
+.then((likes) => res.send(likes))
 .catch(next);
