@@ -1,0 +1,22 @@
+@import url(./_type/popup__input_type_error.css);
+@import url(./_name/popup__input_name.css);
+@import url(./_job/popup__input_job.css);
+@import url(./_new-place/popup__input_new-place_name.css);
+@import url(./_new-place/popup__input_new-place_link.css);
+
+
+.popup__input {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 25px; 
+    width: 100%;
+    border: none;
+    margin-bottom: 0;
+    border-bottom: 1px solid rgba(0,0,0,.2);
+}
+
+@media screen and (max-width: 375px) {
+    .popup__input  {
+        font-size: 12px;
+    }
+    }    

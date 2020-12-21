@@ -1,0 +1,30 @@
+@import url(./__template/element__template.css);
+@import url(./__image/element__image.css);
+@import url(./__item/element__item.css);
+@import url(./__text/element__text.css);
+@import url(./__like-button/element__like-button.css);
+@import url(./__remove-button/element__remove-button.css);
+@import url(./__like-counter/element__like-counter.css);
+
+.element {
+  max-width: 282px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: ease-in-out 0.3s all;
+  position: relative;
+}
+
+.element:hover {
+  transform: scale(1.01);
+  transition: ease-in 0.3s all;
+}
+
+@media screen and (max-width: 450px) {
+  .element {
+    margin: 0 auto;
+    width: 282px;
+  }
+}

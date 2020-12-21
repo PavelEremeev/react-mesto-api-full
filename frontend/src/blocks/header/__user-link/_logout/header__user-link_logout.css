@@ -1,0 +1,13 @@
+.header__user-link_logout {
+  cursor: pointer;
+  border: none;
+  color: white;
+  text-decoration: none;
+  transition: linear 0.3s all;
+  line-height: 18px;
+}
+
+.header__user-link_logout:hover {
+  opacity: 0.5;
+  transition: linear 0.5s all;
+}

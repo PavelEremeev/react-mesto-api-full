@@ -1,0 +1,7 @@
+
+.profile__text-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 295px;
+    justify-content: center;
+}

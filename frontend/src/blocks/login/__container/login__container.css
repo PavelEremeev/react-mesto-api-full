@@ -1,0 +1,12 @@
+.login__container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 15px;
+}
+
+@media screen and (max-width: 650px) {
+  .login__container {
+    margin-top: 10px;
+  }
+}

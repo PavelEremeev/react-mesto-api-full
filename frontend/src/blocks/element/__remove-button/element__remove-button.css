@@ -1,0 +1,19 @@
+
+.element__remove-button {
+    background-image: url(../../../images/trashbox_button.svg);
+    background-color: transparent;
+    width: 18px;
+    height: 20px;
+    border: none;
+    transition: ease-in .3s all;
+    cursor: pointer;
+    position: absolute;
+    top: 18px;
+    right: 15px;
+}
+
+
+.element__remove-button:hover {
+    opacity: .5;
+    transition: linear .3s all;
+}

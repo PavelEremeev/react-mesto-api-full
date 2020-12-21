@@ -1,0 +1,32 @@
+
+.element__text {
+    font-weight: 900;
+    font-size: 24px;
+    line-height: 29px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+
+@media screen and (max-width: 805px) {
+    .element__text {
+        font-size: 18px;
+        line-height: 22px;
+    }
+}
+
+
+@media screen and (max-width: 650px) {
+    .element__text {
+        font-size: 20px;
+        line-height: 22px;
+    }
+}
+
+
+@media screen and (max-width: 450px) {
+    .element__text {
+        font-size: 24px;
+        line-height: 29px;
+    }
+}

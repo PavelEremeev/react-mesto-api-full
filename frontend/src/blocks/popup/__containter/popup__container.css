@@ -1,0 +1,9 @@
+
+.popup__container {
+    display: flex;
+    flex-direction: column;
+    max-width: 75vw;
+    max-height: 75vh;
+    position: absolute;
+    transition: ease 0.5s;
+}

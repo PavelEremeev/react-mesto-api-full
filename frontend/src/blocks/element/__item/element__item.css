@@ -1,0 +1,23 @@
+
+.element__item {
+    max-width: 246px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 21px;
+}
+
+
+@media screen and (max-width: 805px) {
+    .element__item {
+        margin: 0 15px;
+    }
+}
+
+
+@media screen and (max-width: 375px) {
+    .element__item {
+        margin: 0 21px;
+    }
+}
