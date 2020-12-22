@@ -1,7 +1,6 @@
 // старый адрес API Янлекс.Практикума
 // export const BASE_URL = 'https://auth.nomoreparties.co';
-const { API_BASE_URL } = process.env
-export const BASE_URL = API_BASE_URL;
+export const BASE_URL = "https://api.eremeev.students.nomoredomains.rocks";
 
 export const register = (email, password) => {
   return fetch(`${BASE_URL}/signup`, {

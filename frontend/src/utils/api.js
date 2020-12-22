@@ -1,7 +1,6 @@
-const { API_BASE_URL } = process.env
+
 import { getToken } from './token';
 const token = getToken('jwt');
-
 const handleResponse = res => {
   if (res.ok) {
     return res.json();
@@ -100,7 +99,7 @@ class Api {
 // Создание экземпляра класс API для взаимодействия с сервером
 const api = new Api({
   // baseUrl: "https://mesto.nomoreparties.co/v1/cohort-14",
-  baseUrl: API_BASE_URL,
+  baseUrl: "https://api.eremeev.students.nomoredomains.rocks",
   headers: {
     "Content-Type": "application/json",
   },
