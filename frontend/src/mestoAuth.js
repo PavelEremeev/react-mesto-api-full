@@ -1,7 +1,7 @@
 // старый адрес API Янлекс.Практикума
 // export const BASE_URL = 'https://auth.nomoreparties.co';
-
-export const BASE_URL = 'http://localhost:3000';
+const { API_BASE_URL } = process.env
+export const BASE_URL = API_BASE_URL;
 
 export const register = (email, password) => {
   return fetch(`${BASE_URL}/signup`, {
