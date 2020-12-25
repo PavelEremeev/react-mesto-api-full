@@ -1,79 +1,66 @@
 const Card = require('../models/card');
 
-module.exports.getCards = (req, res) => {
-  return Card.find({})
+const BadRequestError = require('../errors/BadRequestError');
+const NotFoundError = require('../errors/NotFoundError');
+const ForbiddenError = require('../errors/ForbiddenError');
+
+module.exports.getCards = (req, res) => Card.find({})
   .populate('user')
   .then((cards) => res.send(cards))
-  .catch((err) => {
-    if (err.kind === 'ObjectId') {
-      return res.status(400).send({ message: 'Невалидный Id' });
-    } if (err.statusCode === 404) {
-      return res.status(404).send({ message: 'Карточка не найдена' });
-    }
-    return res.status(500).send({ message: 'Ошибка чтения файла' });
-  });
-}
+  .catch((err) => res.status(500).send({ message: `Ошибка на сервере: ${err.message}` }))
 
 module.exports.createCard = (req, res, next) => {
-  console.log(req.body)
-  console.log(req.user._id)
+  console.log(req.body);
+  console.log(req.user._id);
   Card.create({
     name: req.body.name,
     link: req.body.link,
-    owner: req.user._id, })
+    owner: req.user._id 
+})
     .catch((err) => {
-      if (err.kind === undefined) {
-        return res.status(404).send({ message: err.message });
-      } if (err.kind === 'ObjectId') {
-        return res.status(400).send({ message: 'Нет карточки с таким id' });
-      }
-      return res.status(500).send({ message: 'Ошибка чтения файла' });
+      throw new BadRequestError({ message: `Некорректные данные: ${err.message}` });
     })
-    .then((card) => res.send(card))
+    .then((card) => res.send({ data: card }))
     .catch(next);
 };
 
 
-module.exports.deleteCard = (req, res, next) =>
-Card.findByIdAndRemove(req.params._id)
-  .catch((err) => {
-    if (err.name === 'ValidationError') {
-      const errorList = Object.keys(err.errors);
-      const messages = errorList.map((item) => err.errors[item].message);
-      res.status(400).send({ message: `Ошибка валидации: ${messages.join(' ')}` });
-    } else {
-      res.status(500).send({ message: 'Ошибка чтения файла' });
-    }
-  })
-  .then((card) => {
-    if (toString(card.owner) !== toString(req.user._id)) {
-      return res.status(400).send({ message: 'Нет прав на удаление карточки' });
-    }
-    return res.status(200).send(card);
-  })
-  .catch(next);
+module.exports.deleteCard = (req, res, next) => {
+  Card.findById(req.params._id)
+    .orFail()
+    .catch(() => {
+      throw new NotFoundError({ message: 'Не найдено карточки с таким id' });
+    })
+    .then((card) => {
+      if (card.owner.toString() !== req.user._id) {
+        throw new ForbiddenError({ message: 'У вас недостаточно прав' });
+      }
+      Card.findByIdAndDelete(req.params._id)
+        .then((card) => {
+          res.send(card);
+        })
+        .catch(next);
+    })
+    .catch(next);
+};
 
-module.exports.addLike = (req, res, next) =>
+module.exports.addLike = (req, res, next) => 
   Card.findByIdAndUpdate(
     req.params._id,
     {
       $addToSet: { likes: req.user._id },
     },
-    { new: true }
+    { new: true },
   )
   .orFail(() => {
     const err = new Error('Карточка не найдена');
     err.statusCode = 404;
     throw err;
   })
-  .catch((err) => {
-    if (err.kind === undefined) {
-      return res.status(404).send({ message: err.message });
-     } if (err.kind === 'ObjectId') {
-      return res.status(400).send({ message: 'Нет карточки с таким id' });
-     }
-     return res.status(500).send({ message: 'Ошибка чтения файла' });
-   })
+  .orFail()
+  .catch(() => {
+    throw new NotFoundError({ message: 'Не найдено карточки с таким id' });
+  })
   .then((likes) => res.send(likes))
   .catch(next);
 
@@ -84,20 +71,16 @@ Card.findByIdAndUpdate(
   {
     $pull: { likes: req.user._id },
   },
-  { new: true }
-)
+  { new: true },
+  )
 .orFail(() => {
   const err = new Error('Карточка не найдена');
   err.statusCode = 404;
   throw err;
 })
-.catch((err) => {
-  if (err.kind === undefined) {
-    return res.status(404).send({ message: err.message });
-   } if (err.kind === 'ObjectId') {
-    return res.status(400).send({ message: 'Нет карточки с таким id' });
-   }
-   return res.status(500).send({ message: 'Ошибка чтения файла' });
- })
+.orFail()
+.catch(() => {
+  throw new NotFoundError({ message: 'Не найдено карточки с таким id' });
+})
 .then((likes) => res.send(likes))
 .catch(next);

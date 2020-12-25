@@ -4,14 +4,13 @@ const {
   createCard,
   deleteCard,
   addLike,
-  removeLike
-  } = require('../controllers/cards');
+  removeLike,
+} = require('../controllers/cards');
 
 const {
   validateUserId,
   validateCard,
-  } = require('../middlewares/validators')
-
+} = require('../middlewares/validators');
 
 // Получение карточек
 router.get('/', getCards);
@@ -23,7 +22,7 @@ router.post('/', validateCard, createCard);
 router.delete('/:_id', validateUserId, deleteCard);
 
 // Добавление лайка
-router.put('/:_id/likes' , validateUserId, addLike);
+router.put('/:_id/likes', validateUserId, addLike);
 // Удаление лайка
-router.delete('/:_id/likes' , validateUserId, removeLike);
+router.delete('/:_id/likes', validateUserId, removeLike);
 module.exports = router;

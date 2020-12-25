@@ -4,17 +4,17 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-const {login, createUser} = require('./controllers/users.js')
-const { requestLogger, errorLogger } = require('./middlewares/logger.js')
 const { errors } = require('celebrate');
+const { login, createUser } = require('./controllers/users.js');
+const { requestLogger, errorLogger } = require('./middlewares/logger.js');
 const usersRouter = require('./routes/users.js');
 const cardsRouter = require('./routes/cards.js');
-const unknownRoute = require('./routes/unknown.js');
-const auth = require('./middlewares/auth')
+const auth = require('./middlewares/auth');
 const {
   validateUser,
   validateLogin,
-} = require('./middlewares/validators')
+} = require('./middlewares/validators');
+const NotFoundError = require('./errors/NotFoundError');
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -28,6 +28,12 @@ const mongoConnectionOptions = {
 
 app.use(requestLogger);
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 app.use(cors());
 
 app.use(bodyParser.json());
@@ -39,18 +45,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
-// app.use('/users', usersRouter);
-// app.use('/cards', cardsRouter);
-app.use('/', unknownRoute);
-
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
 
 app.post('/signin', validateLogin, login);
 app.post('/signup', validateUser, createUser);
+app.use(() => {
+  throw new NotFoundError({ message: 'Запрашиваемый ресурс не найден' });
+});
 
 // обработка ошибок
 app.use(errorLogger);

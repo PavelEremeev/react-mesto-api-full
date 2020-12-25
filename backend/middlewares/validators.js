@@ -15,8 +15,8 @@ const validateUser = celebrate({
     avatar: Joi.string().custom(urlValidation),
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
-  })
-})
+  }),
+});
 
 const validateUserId = celebrate({
   params: Joi.object().keys({
@@ -44,14 +44,12 @@ const validateLogin = celebrate({
   }),
 });
 
-
 const validateCard = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     link: Joi.string().custom(urlValidation).required(),
   }),
 });
-
 
 module.exports = {
   validateUser,

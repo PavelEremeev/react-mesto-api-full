@@ -107,7 +107,8 @@ function App() {
   }
 
   function handleUserRegister(email, password) {
-    mestoAuth.register(email, password).then(() => {    
+    mestoAuth.register(email, password).then((data) => {    
+      console.log(data.token)
         setStatus(true)
         setIsAuthPopupPopupOpen(true)
         history.push('/signin');
@@ -199,7 +200,7 @@ function App() {
   function handleUpdateAvatar(userInfo) {
     api.updateUserImage(userInfo)
       .then((userInfo) => {
-        setCurrentUser(userInfo)
+        setCurrentUser(userInfo.data)
         handleClosePopups()
       }).catch(err => console.log(err))
   }
