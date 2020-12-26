@@ -14,7 +14,6 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findOne({ email }).select('+password')
-
     .then((user) => {
       if (!user) {
         throw new UnAuthError({ message: 'Неправильные email или пароль' });
@@ -28,9 +27,9 @@ module.exports.login = (req, res, next) => {
         });
     })
     .then((user) => {
-      const token = jwt.sign({
-        _id: user._id,
-      }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
+      const token = jwt.sign(
+        {_id: user._id},
+         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
       res.send({ token });
     })
     .catch(next);
@@ -104,6 +103,22 @@ module.exports.createUser = (req, res, next) => {
 
 module.exports.getOneUser = (req, res, next) => {
   console.log(req.params)
+  User.findById(req.params._id)
+    .orFail(() => new NotFoundError({ message: 'Нет такого пользователя' }))
+    .catch((err) => {
+      if (err instanceof NotFoundError) {
+        throw err;
+      }
+      throw new BadRequestError({ message: `Некорректные данные: ${err.message}` });
+    })
+    .then((user) => {
+      res.status(200).send(user);
+    })
+    .catch(next);
+};
+
+module.exports.getMyUser = (req, res, next) => {
+  console.log(req.user)
   User.findById(req.user._id)
     .orFail(() => new NotFoundError({ message: 'Нет такого пользователя' }))
     .catch((err) => {
@@ -137,7 +152,7 @@ module.exports.updateUserInfo = (req, res, next) => {
       throw new BadRequestError({ message: `Некорректные данные: ${err.message}` });
     })
     .then((user) => {
-      res.status(200).send({ data: user });
+      res.status(200).send(user);
     })
     .catch(next);
 };
@@ -161,7 +176,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
       throw new BadRequestError({ message: `Некорректные данные: ${err.message}` });
     })
     .then((user) => {
-      res.status(200).send({ data: user });
+      res.status(200).send(user);
     })
     .catch(next);
 };
