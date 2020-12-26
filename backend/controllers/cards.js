@@ -7,7 +7,7 @@ const ForbiddenError = require('../errors/ForbiddenError');
 module.exports.getCards = (req, res) => Card.find({})
   .populate('user')
   .then((cards) => res.send(cards))
-  .catch((err) => res.status(500).send({ message: `Ошибка на сервере: ${err.message}` }))
+  .catch((err) => res.status(500).send({ message: `Ошибка на сервере: ${err.message}` }));
 
 module.exports.createCard = (req, res, next) => {
   console.log(req.body);
@@ -15,15 +15,14 @@ module.exports.createCard = (req, res, next) => {
   Card.create({
     name: req.body.name,
     link: req.body.link,
-    owner: req.user._id 
-})
+    owner: req.user._id,
+  })
     .catch((err) => {
       throw new BadRequestError({ message: `Некорректные данные: ${err.message}` });
     })
     .then((card) => res.send({ data: card }))
     .catch(next);
 };
-
 
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params._id)
@@ -45,13 +44,26 @@ module.exports.deleteCard = (req, res, next) => {
 };
 
 module.exports.addLike = (req, res, next) => 
-  Card.findByIdAndUpdate(
-    req.params._id,
-    {
-      $addToSet: { likes: req.user._id },
-    },
-    { new: true },
-  )
+Card.findByIdAndUpdate( req.params._id, { $addToSet: { likes: req.user._id },},{ new: true }, )  
+    .orFail(() => {
+      const err = new Error('Карточка не найдена');
+      err.statusCode = 404;
+      throw err;
+    })
+    .orFail()
+    .catch(() => {
+      throw new NotFoundError({ message: 'Не найдено карточки с таким id' });
+    })
+    .then((likes) => res.send(likes))
+    .catch(next);
+
+module.exports.removeLike = (req, res, next) => Card.findByIdAndUpdate(
+  req.params._id,
+  {
+    $pull: { likes: req.user._id },
+  },
+  { new: true },
+)
   .orFail(() => {
     const err = new Error('Карточка не найдена');
     err.statusCode = 404;
@@ -63,24 +75,3 @@ module.exports.addLike = (req, res, next) =>
   })
   .then((likes) => res.send(likes))
   .catch(next);
-
-
-module.exports.removeLike = (req, res, next) =>
-Card.findByIdAndUpdate(
-  req.params._id,
-  {
-    $pull: { likes: req.user._id },
-  },
-  { new: true },
-  )
-.orFail(() => {
-  const err = new Error('Карточка не найдена');
-  err.statusCode = 404;
-  throw err;
-})
-.orFail()
-.catch(() => {
-  throw new NotFoundError({ message: 'Не найдено карточки с таким id' });
-})
-.then((likes) => res.send(likes))
-.catch(next);

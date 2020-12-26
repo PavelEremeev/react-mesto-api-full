@@ -28,8 +28,10 @@ module.exports.login = (req, res, next) => {
     })
     .then((user) => {
       const token = jwt.sign(
-        {_id: user._id},
-         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' },
+        // eslint-disable-next-line
+      );
       res.send({ token });
     })
     .catch(next);
@@ -57,14 +59,12 @@ module.exports.login = (req, res, next) => {
   //   .catch(next)
 };
 
-
 // Получения списка всех зарегистрированных пользователей
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((data) => res.send(data))
     .catch(next);
 };
-
 
 // Созданите пользователя
 module.exports.createUser = (req, res, next) => {
@@ -102,7 +102,7 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.getOneUser = (req, res, next) => {
-  console.log(req.params)
+  console.log(req.params);
   User.findById(req.params._id)
     .orFail(() => new NotFoundError({ message: 'Нет такого пользователя' }))
     .catch((err) => {
@@ -118,7 +118,7 @@ module.exports.getOneUser = (req, res, next) => {
 };
 
 module.exports.getMyUser = (req, res, next) => {
-  console.log(req.user)
+  console.log(req.user);
   User.findById(req.user._id)
     .orFail(() => new NotFoundError({ message: 'Нет такого пользователя' }))
     .catch((err) => {
@@ -135,7 +135,7 @@ module.exports.getMyUser = (req, res, next) => {
 
 module.exports.updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
-  console.log(req.body)
+  console.log(req.body);
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
@@ -143,6 +143,7 @@ module.exports.updateUserInfo = (req, res, next) => {
       new: true,
       runValidators: true,
       upsert: true,
+      // eslint-disable-next-line
     })
     .orFail(() => new NotFoundError({ message: 'Нет такого пользователя' }))
     .catch((err) => {
@@ -157,7 +158,6 @@ module.exports.updateUserInfo = (req, res, next) => {
     .catch(next);
 };
 
-
 module.exports.updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
@@ -167,7 +167,9 @@ module.exports.updateUserAvatar = (req, res, next) => {
       new: true,
       runValidators: true,
       upsert: true,
-    },)
+
+    },
+  )
     .orFail(() => new NotFoundError({ message: 'Нет такого пользователя' }))
     .catch((err) => {
       if (err instanceof NotFoundError) {

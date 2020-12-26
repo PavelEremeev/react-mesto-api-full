@@ -12,7 +12,6 @@ const {
   validateUserInfoUpdate,
   validateUserAvatarUpdate,
   validateUserId,
-  validateUser,
 } = require('../middlewares/validators');
 
 // Получение  всех юзеров
@@ -20,10 +19,9 @@ router.get('/', getUsers);
 
 // Получение определенного юзера
 
-router.get('/me', getMyUser)
+router.get('/me', validateUserId, getMyUser);
 
-router.get('/:_id', getOneUser);
-
+router.get('/:_id', validateUserId, getOneUser);
 
 // Обновление информации
 router.patch('/me', validateUserInfoUpdate, updateUserInfo);

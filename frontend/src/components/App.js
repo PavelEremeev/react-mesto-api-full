@@ -107,16 +107,21 @@ function App() {
   }
 
   function handleUserRegister(email, password) {
-    mestoAuth.register(email, password).then((data) => {    
-      console.log(data)
+   
+    mestoAuth.register(email, password).then((data) => {
+      console.log(data) 
+      if (data._id) { 
         setStatus(true)
         setIsAuthPopupPopupOpen(true)
         history.push('/signin');
-    }).catch(err => {
-      console.log(err)
-      setStatus(false)
-      setIsAuthPopupPopupOpen(true)
+      }
     })
+      try {
+        setStatus(false)
+        setIsAuthPopupPopupOpen(true)
+      } catch(err) {
+        console.log(err)
+      }
   }
 
   function handleUserLogin(email, password) {
