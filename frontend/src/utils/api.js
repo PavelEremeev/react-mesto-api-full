@@ -98,8 +98,8 @@ class Api {
 
 // Создание экземпляра класс API для взаимодействия с сервером
 const api = new Api({
-  baseUrl: "http://localhost:3000",
-    // baseUrl: "https://api.eremeev.students.nomoredomains.rocks",
+  // baseUrl: "http://localhost:3000",
+  baseUrl: "https://api.eremeev.students.nomoredomains.rocks",
   headers: {
     "Content-Type": "application/json",
   },
