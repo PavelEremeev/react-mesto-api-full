@@ -58,20 +58,6 @@ class Api {
     }).then(handleResponse);
   }
 
-  // rateItem(cardId, isLiked) {
-  //   let methodValue;
-  //   isLiked ? (methodValue = "DELETE") : (methodValue = "PUT");
-  //   return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
-  //     method: methodValue,
-  //     headers: this._headers,
-  //   }).then((res) => {
-  //     if (res.ok) {
-  //       return res.json();
-  //     }
-  //     return Promise.reject(`Ошибка при добавлении лайка :( ${res.status}`);
-  //   });
-  // }
-
   putLike(cardId) {
     return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "PUT",
@@ -97,8 +83,8 @@ class Api {
 
 // Создание экземпляра класс API для взаимодействия с сервером
 const api = new Api({
-  baseUrl: "http://localhost:3000",
-  // baseUrl: "https://api.eremeev.students.nomoredomains.rocks",
+  // baseUrl: "http://localhost:3000",
+  baseUrl: "https://api.eremeev.students.nomoredomains.rocks",
   headers: {
     "Content-Type": "application/json",
   },
